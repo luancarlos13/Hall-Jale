@@ -1,28 +1,4 @@
-/**
- * =====================================================
- * STUDIO HAIR & BEAUTY - SALÃO DE BELEZA / BARBER SHOP
- * Script Principal
- * =====================================================
- *
- * Este arquivo contém todas as funcionalidades JavaScript
- * da landing page, incluindo:
- * - Menu mobile (hambúrguer)
- * - Scroll suave para âncoras
- * - Acordeão do FAQ
- * - Animações de scroll
- * - Integração com WhatsApp
- *
- * ÍNDICE:
- * 1. Menu Mobile
- * 2. Scroll Suave
- * 3. FAQ Acordeão
- * 4. Header Scroll Effect
- * 5. Animações de Entrada
- * 6. Link WhatsApp
- * 7. Mapa Placeholder
- *
- * =====================================================
- */
+
 
 // Aguarda o DOM estar completamente carregado
 document.addEventListener('DOMContentLoaded', function() {
