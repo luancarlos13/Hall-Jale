@@ -1,5 +1,3 @@
-
-
 // Aguarda o DOM estar completamente carregado
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -16,12 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Verifica se os elementos existem antes de adicionar eventos
     if (navToggle && navMenu) {
+        navToggle.setAttribute('aria-expanded', 'false');
 
         // Toggle do menu ao clicar no hambúrguer
         navToggle.addEventListener('click', function() {
-            // Adiciona/remove a classe 'active' em ambos os elementos
-            navToggle.classList.toggle('active');
+            const isOpen = navToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
+            navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
 
         // Fecha o menu ao clicar em qualquer link
@@ -30,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', function() {
                 navToggle.classList.remove('active');
                 navMenu.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
             });
         });
 
@@ -39,6 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
                 navToggle.classList.remove('active');
                 navMenu.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
             }
         });
     }
@@ -192,23 +201,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 
     /* =====================================================
-       6. LINK WHATSAPP COM MENSAGEM PADRÃO
+       6. LINK WHATSAPP SEM MENSAGEM AUTOMÁTICA
        =====================================================
-       Adiciona automaticamente uma mensagem padrão aos links
-       do WhatsApp, facilitando o primeiro contato.
+       Garante que os links do WhatsApp abram sem qualquer
+       mensagem ou texto pré-definido.
     */
 
-    // EDITÁVEL: Altere a mensagem padrão aqui
-    const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
-    const defaultMessage = encodeURIComponent(
-        'Olá! Gostaria de agendar um horário no Studio Hair & Beauty.'
-    );
+    const whatsappLinks = document.querySelectorAll('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
 
-    // Adiciona a mensagem padrão se não houver uma
     whatsappLinks.forEach(link => {
-        const currentHref = link.getAttribute('href');
-        if (!currentHref.includes('text=')) {
-            link.setAttribute('href', `${currentHref}?text=${defaultMessage}`);
+        const originalHref = link.getAttribute('href');
+
+        if (!originalHref) return;
+
+        try {
+            const url = new URL(originalHref);
+
+            if (url.hostname.includes('wa.me') || url.hostname.includes('api.whatsapp.com')) {
+                url.search = '';
+                link.setAttribute('href', url.toString());
+            }
+        } catch (error) {
+            const cleanHref = originalHref.split('?')[0];
+            link.setAttribute('href', cleanHref);
         }
     });
 
@@ -219,17 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
        EDITÁVEL: Altere o endereço na URL abaixo.
     */
 
-    const mapaPlaceholder = document.querySelector('.mapa-placeholder');
 
-    if (mapaPlaceholder) {
-        mapaPlaceholder.addEventListener('click', function() {
-            // EDITÁVEL: Altere o endereço aqui
-            const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Rua+das+Flores+456+Jardim+Paulista+São+Paulo+SP';
-            window.open(mapsUrl, '_blank');
-        });
-    }
-
-});
 
 /* =====================================================
    FIM DO SCRIPT
@@ -250,3 +255,5 @@ document.addEventListener('DOMContentLoaded', function() {
       seletores na seção 5 (animateElements)
 
    ===================================================== */
+
+});
